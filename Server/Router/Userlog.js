@@ -22,6 +22,10 @@ router.use(cors({
 router.post('/signup', async (req, res) => {
 
           try {
+                    const a = await user.findOne({ email })
+                    if(a){
+                              return res.status(500).send('Email already exist!')
+                    }
                     const { email, firstName, lastName, password } = req.body
                     const salt = await auth.genSaltSync(11)
                     const encryptpass = await auth.hashSync(password, salt)
