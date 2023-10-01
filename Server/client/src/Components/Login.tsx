@@ -32,7 +32,7 @@ const Login: React.FC = () => {
 
                                         sessionStorage.setItem('uid',res.data)
                                         dispatch(chageLogIn())
-                                        console.log(res.data);
+                                     
 
                               }).catch(() => {
 

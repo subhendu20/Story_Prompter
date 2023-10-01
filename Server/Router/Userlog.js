@@ -34,7 +34,7 @@ router.post('/signup', async (req, res) => {
                     })
 
                     newuser.save().then(() => {
-                              console.log(newuser)
+                       
                               res.send(newuser)
                     }).catch((e) => {
                               console.log(e)
@@ -79,7 +79,7 @@ router.post('/login', async (req, res) => {
           }
 
           const cookie = await JWT.sign(a.id, jwtoken)
-          console.log(cookie)
+          
 
 
 
@@ -100,17 +100,7 @@ router.post('/login', async (req, res) => {
 
 
 })
-router.delete('/logout', async (req, res) => {
-          const getcookie = await req.cookies.signintoken
-          if (!getcookie) {
-                    console.log(getcookie)
-                    return res.status(400).send("Logged out")
-          }
 
-          res.clearCookie('signintoken').send("logout")
-
-
-})
 
 
 

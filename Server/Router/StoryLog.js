@@ -48,13 +48,13 @@ async function generateStoryWithRetry(prompt, retryCount = 0) {
         return response.data.choices[0].text.trim();
     } catch (error) {
         if (error.response && error.response.status === 429) {
-          console.log("hg")
+      
           
             const waitTime = Math.pow(2, retryCount) * 1000; // Wait for 2^retryCount seconds
             await sleep(waitTime);
             return generateStoryWithRetry(prompt, retryCount + 1);
         } else if (error.response && error.response.status === 503) {
-          console.log("fi")
+        
            
             const retryAfter = parseInt(error.response.headers['retry-after']) || 1;
             await sleep(retryAfter * 1000); 
@@ -81,7 +81,7 @@ router.post('/generatestory', async (req, res) => {
         if (!check) {
             return res.send("you are logged out");
         }
-        console.log(command)
+        
 
         const story = await generateStoryWithRetry(command);
         res.send(story);
@@ -104,7 +104,7 @@ router.post('/addstory', async (req, res) => {
 
 
           try {
-                    console.log(story)
+                    
                     const getcookie = await req.cookies.signintoken
                     if (!getcookie) {
                               return res.status(400).send("you are logged out")
@@ -115,23 +115,23 @@ router.post('/addstory', async (req, res) => {
                     }
                     else {
                               const find = await user.findById(check)
-                              console.log(find)
+                            
                               const newstory = new Story({
                                         userId: check,
                                         body: story,
                                         username: find.name,
                                         upVote: []
                               })
-                              console.log(newstory)
+                            
 
                               newstory.save().then(() => {
 
-                                        console.log(newstory)
+                                       
 
                                         res.send(newstory)
 
                               }).catch((e) => {
-                                        console.log(e)
+                                       
                               })
 
                     }
@@ -140,7 +140,7 @@ router.post('/addstory', async (req, res) => {
 
 
           } catch (error) {
-                    console.log(error)
+                    
                     res.send(error)
 
 
@@ -168,7 +168,7 @@ router.get('/getstories', async (req, res) => {
                     }
 
           } catch (error) {
-                    console.log(error)
+                    
 
           }
 })
@@ -217,10 +217,10 @@ router.post('/removestory', async (req, res) => {
 // --------------------------------------------upvote---------------------------------------------- //
 
 router.patch('/addvote/:id', async (req, res) => {
-          console.log(req.cookies)
+          
           const getcookie = await req.cookies.signintoken
           if (!getcookie) {
-                    console.log(getcookie)
+               
                     return res.status(400).send("Logged out")
           }
 
@@ -251,7 +251,7 @@ router.patch('/addvote/:id', async (req, res) => {
 router.patch('/reducevote/:id', async (req, res) => {
           const getcookie = await req.cookies.signintoken
           if (!getcookie) {
-                    console.log(getcookie)
+                    
                     return res.status(400).send("Logged out")
           }
 

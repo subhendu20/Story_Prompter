@@ -27,7 +27,7 @@ const Home: React.FC = () => {
                     axios.get('http://localhost:7001/story/getstories', {
                               withCredentials: true
                     }).then((res)=>{
-                              console.log(res.data)
+                              
                               setstorylist(res.data)
                     }).catch((e)=>{
                               console.log(e)

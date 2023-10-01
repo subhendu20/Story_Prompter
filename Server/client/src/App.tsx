@@ -21,7 +21,7 @@ const App: React.FC = () => {
   React.useEffect(() => {
     const checkLoginStatus = async () => {
       const token_check =await sessionStorage.getItem('uid')
-      console.log(token_check);
+      
       if (token_check) {
         await dispatch(chageLogIn());
       }
