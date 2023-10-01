@@ -1,0 +1,48 @@
+main{
+          width: 100%;
+          height: 100vh;
+          background-color: aliceblue;
+          position: relative;
+          z-index: 1;
+          padding-top: 5%;
+}
+#float-window{
+          position: absolute;
+          border-radius: 1rem;
+          padding:1rem;
+          top:25%;
+          width: 30%;
+          left: 35%;
+          min-height: 20rem;
+          background-color: rgb(199, 198, 198);
+          box-shadow: rgba(2, 2, 2, 0.35) 0px 5px 15px;
+          opacity: 1!important;
+          z-index: 5;
+}
+#cls-pop{
+          font-size: 2rem;
+          color: rgb(105, 103, 103);
+          position: absolute;
+          top:0;
+          right: 0;
+}
+#cls-pop:hover{
+          color:black;
+}
+.none{
+          display: none!important;
+}
+.back-blur{
+          opacity: 0.4;
+         
+          pointer-events: none;
+}
+@media (max-width:700px){
+          main{
+                    padding-top: 10%;
+          }
+          #float-window{
+                    width: 90%;
+                    left: 5%;
+          }
+}

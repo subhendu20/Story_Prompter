@@ -1,0 +1,60 @@
+h1#p-head{
+          font-size: 2rem;
+          margin:1rem auto;
+
+
+}
+form.form-add-story{
+          display: flex;
+          flex-direction: column;
+          font-size: 1.5rem;
+          color:rgb(78, 77, 77);
+          
+          padding: 1rem;
+}
+form.form-add-story h3{
+          font-weight: 400;
+}
+form.form-add-story input{
+          border: none;
+          padding: 1rem;
+          border-radius: 0.5rem;
+          background-color: white;
+          color: gray;
+          margin: 1rem;
+          outline: none;
+
+}
+form.form-add-story textarea{
+          border: none;
+          border-radius: 0.5rem;
+          margin: 1rem;
+}
+form.form-add-story input::placeholder {
+          font-size: 1.5rem;
+          color: rgb(48, 48, 48);
+}
+form.form-add-story button{
+          border: none;
+          border-radius: 0.5rem;
+          color: black;
+          background-color: rgb(158, 147, 147);
+          padding: 1rem;
+          font-size: 1.5rem;
+          width: fit-content;
+          margin: auto;
+          transition: 0.3s;
+}
+form.form-add-story button:hover{
+          background-color: rgb(62, 8, 112);
+          color: white;
+}
+form.form-add-story p{
+          font-size: 1.5rem;
+          color: rgb(62, 8, 112);
+}
+form.form-add-story i{
+          font-size: 1.5rem;
+          color: rgb(62, 8, 112);
+
+}
