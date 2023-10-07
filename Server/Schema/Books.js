@@ -1,25 +1,31 @@
 const mongoose = require('mongoose')
-const newsbook = new mongoose.Schema({
-          userId: {
+const newbook = new mongoose.Schema({
+          _id: {
                     type: String,
-                    required: true
           },
-          username:{
-                    type:String,
-                    required:true
 
+          name: {
+                    type:String
           },
-          body: {
-                    type: String,
-                    required: true
-          }
-          ,upVote: {
-                    type: [String]
-          }
-          ,keyword:{
-                    type:[String]
-          }
+          author: {
+                    type:String
+          },
+          
+          pages: {
+                    type:Number
+          },
+          image: {
+                    type:String
+          },
+          description: {
+                    type:String
+          },
+          published: {
+                    type:String
+          },
+          publication: {type:String},
+          price: {type:Number}
 })
 
-const bookdata = new mongoose.model('book', book)
+const bookdata = new mongoose.model('book', newbook)
 module.exports = bookdata;
