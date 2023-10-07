@@ -1,3 +1,4 @@
+
 h1#p-head{
           font-size: 2rem;
           margin:1rem auto;
@@ -9,6 +10,7 @@ form.form-add-story{
           flex-direction: column;
           font-size: 1.5rem;
           color:rgb(78, 77, 77);
+         
           
           padding: 1rem;
 }

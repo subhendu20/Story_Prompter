@@ -5,13 +5,15 @@ import { useDispatch } from 'react-redux';
 import {increment,decrement} from '../Action';
 
 import $ from 'jquery'
+
 interface PostProps {
           data: {
                     _id: string,
                     body: string;
                     userId:string;
                     username: string,
-                    upVote: [string]
+                    upVote: [string],
+                    keyword:[string]
 
                     
           };
@@ -32,7 +34,7 @@ const Post: React.FC<PostProps> = ({data}) => {
                     }).then(()=>{
                               setVotes(prevVotes => prevVotes + 1);
                              
-                              $('.bx-upvote').toggleClass('bx-upvote bxs-upvote')
+                              $(`#novoted${data._id}`).toggleClass('bx-upvote bxs-upvote')
                               dispatch(increment())
                               
 
@@ -47,7 +49,7 @@ const Post: React.FC<PostProps> = ({data}) => {
                               withCredentials: true
                     }).then(()=>{
                               setVotes(prevVotes => prevVotes - 1);
-                              $('.bxs-upvote').toggleClass('bxs-upvote bx-upvote')
+                              $(`#voted${data._id}`).toggleClass('bxs-upvote bx-upvote')
                               dispatch(decrement())
                               
 
@@ -64,8 +66,18 @@ const Post: React.FC<PostProps> = ({data}) => {
                     <div className='post-box'>
                               <h2>{data.username}</h2>
                               <p>{data.body}</p>
+                              <span className="keywords">
+                              {
+                                        (data.keyword.length>0) && data.keyword.map((e)=>{
+                                                  return <a href="/" className='keys'>`#${e}`</a>
 
-                              <span className="button">{(data.upVote.includes(userId))?<i className='bx bxs-upvote' onClick={remove_vote}></i>:<i className='bx bx-upvote' onClick={add_vote}></i>}<p>{votes} Upvotes</p></span>
+                                        })
+                              }
+
+                              </span>
+                             
+
+                              <span className="button">{(data.upVote.includes(userId))?<i className='bx bxs-upvote' id={`voted${data._id}`} onClick={remove_vote}></i>:<i className='bx bx-upvote' id={`novoted${data._id}`} onClick={add_vote}></i>}<p>{votes} Upvotes</p></span>
                     </div>
           )
 }

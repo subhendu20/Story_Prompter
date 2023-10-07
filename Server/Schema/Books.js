@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const newstory = new mongoose.Schema({
+const newsbook = new mongoose.Schema({
           userId: {
                     type: String,
                     required: true
@@ -21,5 +21,5 @@ const newstory = new mongoose.Schema({
           }
 })
 
-const storydata = new mongoose.model('story', newstory)
-module.exports = storydata;
+const bookdata = new mongoose.model('book', book)
+module.exports = bookdata;

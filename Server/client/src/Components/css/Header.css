@@ -1,38 +1,57 @@
 header{
-          width: 100%;
+          width: 98%;
           height: auto;
-          padding: 1rem;
+          
+          padding: 2rem ;
           display: flex;
           justify-content: space-between;
           position: fixed;
-          background-color: rgb(62, 8, 112);
-          box-shadow:  rgba(127, 4, 158, 0.35) 0px 5px 15px;
-          top: 0;
-          left: 0;
+          left: 1%;
+          top: 0%;
+        
+         
           z-index: 2;
+          border-radius: 1rem;
 }
 header span.logo{
-          font-size: 3rem;
-          color: aliceblue;
+          font-size: 2.5rem;
+          color: rgb(100, 50, 192);
           font-weight: 500;
 }
 header nav{
-          width: auto;
+          width: fit-content;
           height: auto;
+          margin-right: 10%;
 }
 header nav ul{
           display: flex;
           list-style-type: none;
+          background-color: rgb(236, 232, 232);
+          box-shadow:  rgba(5, 5, 5, 0.35) 0px 5px 15px;
+          padding: 0.5rem 0rem;
+          border-radius: 1rem;
+          
+         
 }
 header nav ul li{
           margin: 1rem;
           display: flex;
           align-items: center;
-          color: rgb(214, 216, 218);
+          color: rgb(42, 42, 43);
           font-size: 1.5rem;
           cursor: pointer;
           transition: 0.4s;
+          
+     
+}
+header nav ul li a{
+          text-decoration: none;
+          color: rgb(42, 42, 43);
+          font-size: 1.5rem;
+          cursor: pointer;
+          transition: 0.4s;
+
 }
 header nav ul li:hover{
-          color:white;
+          color:rgb(0, 0, 0);
 }

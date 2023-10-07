@@ -12,8 +12,7 @@ const axios = require('axios');
 const axiosRetry = require('axios-retry');
 
 const API_KEY = process.env.APIKEY;
-const ENGINE = 'text-davinci-003';
-const MAX_TOKENS = 5;
+
 
 
 
@@ -25,46 +24,33 @@ router.use(cors({
 }));
 
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+const generateStory = async (text) => {
+    var keyArray = await text.split(" ")
+    console.log(keyArray)
+    return keyArray
+
+
+
+    // var myHeaders = await new Headers();
+    // await myHeaders.append("apikey", "l04ZrNgLIHsCZy1IcXPYSMbL9toqbgu8");
+
+    // var raw = text;
+
+    // var requestOptions = {
+    //     method: 'POST',
+    //     redirect: 'follow',
+    //     headers: myHeaders,
+    //     body: raw
+    // };
+
+    // fetch("https://api.apilayer.com/keyword", requestOptions)
+    //     .then(response => 
+    //         response.text())
+    //     .then(result => console.log(result))
+    //     .catch(error => console.log('error', error));
+
+
 }
-
-async function generateStoryWithRetry(prompt, retryCount = 0) {
-    try {
-        const response = await axios.post(
-            `https://api.openai.com/v1/engines/${ENGINE}/completions`,
-            {
-                prompt: prompt,
-                max_tokens: MAX_TOKENS
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${API_KEY}`
-                }
-            }
-        );
-
-        return response.data.choices[0].text.trim();
-    } catch (error) {
-        if (error.response && error.response.status === 429) {
-      
-          
-            const waitTime = Math.pow(2, retryCount) * 1000; // Wait for 2^retryCount seconds
-            await sleep(waitTime);
-            return generateStoryWithRetry(prompt, retryCount + 1);
-        } else if (error.response && error.response.status === 503) {
-        
-           
-            const retryAfter = parseInt(error.response.headers['retry-after']) || 1;
-            await sleep(retryAfter * 1000); 
-            return generateStoryWithRetry(prompt, retryCount);
-        }
-        throw error;
-    }
-}
-
-axiosRetry(axios, { retries: 0, retryDelay: axiosRetry.exponentialDelay });
 
 
 
@@ -81,10 +67,13 @@ router.post('/generatestory', async (req, res) => {
         if (!check) {
             return res.send("you are logged out");
         }
-        
 
-        const story = await generateStoryWithRetry(command);
-        res.send(story);
+
+        const keyList = await generateStory(command);
+        res.send({
+            "story": command,
+            "keys": keyList
+        });
     } catch (error) {
         console.error(error);
         res.status(500).send("Internal Server Error");
@@ -100,51 +89,53 @@ router.post('/generatestory', async (req, res) => {
 
 
 router.post('/addstory', async (req, res) => {
-          const { story } = req.body
+    const { story, keys } = req.body
 
 
-          try {
-                    
-                    const getcookie = await req.cookies.signintoken
-                    if (!getcookie) {
-                              return res.status(400).send("you are logged out")
-                    }
-                    const check = await JWT.verify(getcookie, jwtoken)
-                    if (!check) {
-                              return res.send("you are logged out")
-                    }
-                    else {
-                              const find = await user.findById(check)
-                            
-                              const newstory = new Story({
-                                        userId: check,
-                                        body: story,
-                                        username: find.name,
-                                        upVote: []
-                              })
-                            
+    try {
 
-                              newstory.save().then(() => {
+        const getcookie = await req.cookies.signintoken
+        if (!getcookie) {
+            return res.status(400).send("you are logged out")
+        }
+        const check = await JWT.verify(getcookie, jwtoken)
+        if (!check) {
+            return res.send("you are logged out")
+        }
+        else {
+            console.log(`${req.body}`)
+            const find = await user.findById(check)
 
-                                       
+            const newstory = await new Story({
+                userId: check,
+                body: story,
+                username: find.name,
+                upVote: [],
+                keyWord: keys
+            })
 
-                                        res.send(newstory)
 
-                              }).catch((e) => {
-                                       
-                              })
-
-                    }
+            newstory.save().then(() => {
 
 
 
+                res.send(newstory)
 
-          } catch (error) {
-                    
-                    res.send(error)
+            }).catch((e) => {
+
+            })
+
+        }
 
 
-          }
+
+
+    } catch (error) {
+
+        res.send(error)
+
+
+    }
 
 
 
@@ -152,25 +143,25 @@ router.post('/addstory', async (req, res) => {
 
 // --------------------------------------get all story--------------------------------------------------------//
 router.get('/getstories', async (req, res) => {
-          try {
-                    const getcookie = await req.cookies.signintoken
-                    if (!getcookie) {
-                              return res.status(400).send("you are logged out")
-                    }
-                    const check = await JWT.verify(getcookie, jwtoken)
-                    if (!check) {
-                              return res.send("you are logged out")
-                    }
-                    else {
-                              const stotylist = await Story.find({}).sort({ upVote: -1 });
-                              res.send(stotylist);
+    try {
+        const getcookie = await req.cookies.signintoken
+        if (!getcookie) {
+            return res.status(400).send("you are logged out")
+        }
+        const check = await JWT.verify(getcookie, jwtoken)
+        if (!check) {
+            return res.send("you are logged out")
+        }
+        else {
+            const stotylist = await Story.find({}).sort({ upVote: -1 });
+            res.send(stotylist);
 
-                    }
+        }
 
-          } catch (error) {
-                    
+    } catch (error) {
 
-          }
+
+    }
 })
 
 
@@ -180,25 +171,25 @@ router.post('/removestory', async (req, res) => {
 
 
 
-          const { email, password } = req.body
-          const a = await user.findOne({ email })
+    const { email, password } = req.body
+    const a = await user.findOne({ email })
 
 
 
 
-          if (!a) {
-                    return res.status(400).send("invalid Credentials")
-          }
-          const passwordcheck = await auth.compare(password, a.password)
+    if (!a) {
+        return res.status(400).send("invalid Credentials")
+    }
+    const passwordcheck = await auth.compare(password, a.password)
 
-          if (!passwordcheck) {
-                    return res.status(400).send("invalid pasword")
-          }
+    if (!passwordcheck) {
+        return res.status(400).send("invalid pasword")
+    }
 
-          const cookie = await JWT.sign(a.id, jwtoken)
+    const cookie = await JWT.sign(a.id, jwtoken)
 
 
-          const cok = await res.cookie("signintoken", cookie).send("done")
+    const cok = await res.cookie("signintoken", cookie).send("done")
 
 
 
@@ -217,30 +208,30 @@ router.post('/removestory', async (req, res) => {
 // --------------------------------------------upvote---------------------------------------------- //
 
 router.patch('/addvote/:id', async (req, res) => {
-          
-          const getcookie = await req.cookies.signintoken
-          if (!getcookie) {
-               
-                    return res.status(400).send("Logged out")
-          }
 
-          const check = await JWT.verify(getcookie, jwtoken)
-          if (!check) {
-                    return res.send("you are logged out")
-          }
-          else {
-                    const updatedStory = await Story.findByIdAndUpdate(
-                              req.params.id,
-                              { $push: { upVote: check } },
-                              { new: true }
-                    );
+    const getcookie = await req.cookies.signintoken
+    if (!getcookie) {
 
-                    if (!updatedStory) {
-                              return res.status(400).send('Error')
-                    }
-                    return res.send('added')
+        return res.status(400).send("Logged out")
+    }
 
-          }
+    const check = await JWT.verify(getcookie, jwtoken)
+    if (!check) {
+        return res.send("you are logged out")
+    }
+    else {
+        const updatedStory = await Story.findByIdAndUpdate(
+            req.params.id,
+            { $push: { upVote: check } },
+            { new: true }
+        );
+
+        if (!updatedStory) {
+            return res.status(400).send('Error')
+        }
+        return res.send('added')
+
+    }
 
 
 })
@@ -249,29 +240,29 @@ router.patch('/addvote/:id', async (req, res) => {
 // -------------------------------------------reducevote------------------------------------------------- //
 
 router.patch('/reducevote/:id', async (req, res) => {
-          const getcookie = await req.cookies.signintoken
-          if (!getcookie) {
-                    
-                    return res.status(400).send("Logged out")
-          }
+    const getcookie = await req.cookies.signintoken
+    if (!getcookie) {
 
-          const check = await JWT.verify(getcookie, jwtoken)
-          if (!check) {
-                    return res.send("you are logged out")
-          }
-          else {
-                    const updatedStory = await Story.findByIdAndUpdate(
-                              req.params.id,
-                              { $pull: { upVote: check } },
-                              { new: true }
-                    );
+        return res.status(400).send("Logged out")
+    }
 
-                    if (!updatedStory) {
-                              return res.status(400).send('Error')
-                    }
-                    return res.send('Removed')
+    const check = await JWT.verify(getcookie, jwtoken)
+    if (!check) {
+        return res.send("you are logged out")
+    }
+    else {
+        const updatedStory = await Story.findByIdAndUpdate(
+            req.params.id,
+            { $pull: { upVote: check } },
+            { new: true }
+        );
 
-          }
+        if (!updatedStory) {
+            return res.status(400).send('Error')
+        }
+        return res.send('Removed')
+
+    }
 
 
 })

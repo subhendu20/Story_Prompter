@@ -1,6 +1,7 @@
 import React from 'react'
 import './css/Header.css'
 import $ from 'jquery'
+import { Link } from 'react-router-dom'
 
 
 const Header: React.FC = () => {
@@ -15,7 +16,7 @@ const Header: React.FC = () => {
                                                             $('#post-window').toggleClass('back-blur')
 
                                                   }}>Add Story  <i className='bx bxs-message-alt-add'  ></i></li>
-                                                  <li>Liked  <i className='bx bxs-like' ></i></li>
+                                                  <li><Link to="/buybooks"> Books <i className='bx bxs-like' ></i></Link></li>
                                                   <li onClick={() => {
                                                             $('#log-window').toggleClass('none')
                                                   }}>Log out  <i className='bx bx-log-out-circle'></i></li>

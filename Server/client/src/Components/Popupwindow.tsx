@@ -3,11 +3,16 @@ import './css/Popupwindow.css'
 import axios from 'axios'
 import $ from 'jquery'
 import { useDispatch } from 'react-redux';
-import {increment} from '../Action';
+import { increment } from '../Action';
 interface starr {
           addline: boolean,
           addstory: boolean,
 
+}
+
+interface storyList {
+          story: string,
+          keys: [string] | []
 }
 
 
@@ -19,7 +24,7 @@ const Popupwindow: React.FC = () => {
 
           })
           const [command, setcommand] = React.useState<string>('')
-          const [story, setstory] = React.useState<string>('')
+          const [storylist, setstorylist] = React.useState<storyList>({ story: '', keys: [] })
 
 
           const add_line = (e: FormEvent<HTMLFormElement>) => {
@@ -28,7 +33,10 @@ const Popupwindow: React.FC = () => {
                               withCredentials: true
                     }).then((res) => {
 
-                              setstory(res.data)
+                              setstorylist({
+                                        story: res.data.story,
+                                        keys: res.data.keys
+                              })
 
                               setstatusarr({
                                         addline: false,
@@ -45,7 +53,8 @@ const Popupwindow: React.FC = () => {
           }
           const add_story = (e: FormEvent<HTMLFormElement>) => {
                     e.preventDefault()
-                    axios.post('http://localhost:7001/story/addstory', { story }, {
+                    console.log(storylist)
+                    axios.post('http://localhost:7001/story/addstory', { storylist }, {
                               withCredentials: true
                     }).then(() => {
                               dispatch(increment())
@@ -56,7 +65,10 @@ const Popupwindow: React.FC = () => {
 
                               })
                               setcommand('')
-                              setstory('')
+                              setstorylist({
+                                        story: '', keys: []
+
+                              })
                               $('.story-det').val('')
                               $('#float-window').toggleClass('none')
                               $('#post-window').toggleClass('back-blur')
@@ -75,24 +87,29 @@ const Popupwindow: React.FC = () => {
 
           return (
                     <React.Fragment>
-                              <h1 id='p-head'>Add keywords and Create your own story</h1>
+                              <h1 id='p-head'> Create your own story and Add keywords</h1>
                               {(statusarr.addline) && <form className='form-add-story' onSubmit={add_line}>
-                                        <h3>Enter your desires ,we'll create for you!</h3>
-                                        <input type="text" className='story-det' name='line' required min={10} onChange={(e) => {
+                                        <h3>Write a story</h3>
+                                        <textarea  name='line' required  cols={30} rows={10} className='story-det' onChange={(e) => {
                                                   setcommand(e.target.value)
-                                        }} />
+                                        }}></textarea>
                                         <button type='submit'>Generate story</button>
 
                               </form>}
                               {(statusarr.addstory) && <form className='form-add-story' onSubmit={add_story}>
-                                        <h3>Edit your story and save it</h3>
-                                        <textarea name="body" cols={30} rows={10} className='story-det' value={story} required onChange={(e) => {
-                                                  setstory(e.target.value)
-                                        }}></textarea>
+                                        <h3>Add or remove your keywords</h3>
+                                        <input className='story-det' name="body" min={10}  value={storylist.keys.map((e)=>{
+                                                  return `#${e}`
+
+                                        })} required onChange={(e) => {
+                                                  setstorylist({...storylist,
+                                                            story:e.target.value
+                                                  })
+                                        }}/>
                                         <button type='submit'>Upload</button>
 
                               </form>}
-                              
+
 
 
                     </React.Fragment>

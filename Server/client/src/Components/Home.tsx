@@ -12,7 +12,8 @@ interface MyObject {
           userId: string;
           username:string;
           body:string;
-          upVote:[string]
+          upVote:[string],
+          keyword:[string]
 
           
         }

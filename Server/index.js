@@ -4,6 +4,7 @@ const dotenv = require('dotenv').config()
 const middleware = require('body-parser')
 const userLog = require('./Router/Userlog')
 const storyLog = require('./Router/StoryLog')
+const bookLog = require('./Router/Buybook')
 const app = express()
 // ---------------------------------------------database connection------------------------------------------//
 mongoose.connect(process.env.DB,{
@@ -21,6 +22,7 @@ app.use(middleware.urlencoded({ extended: false }));
 app.use(middleware.json());
 app.use('/auth',userLog)
 app.use('/story',storyLog)
+app.use('/books',bookLog)
 
 
 
